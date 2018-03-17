@@ -32,3 +32,8 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+
+# mac
+.DS_Store
+*.swp
+*.*.swp
