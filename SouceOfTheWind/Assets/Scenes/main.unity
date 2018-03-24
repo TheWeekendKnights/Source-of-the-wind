@@ -123,6 +123,7 @@ GameObject:
   - component: {fileID: 1335156734}
   - component: {fileID: 1335156733}
   - component: {fileID: 1335156732}
+  - component: {fileID: 1335156735}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -141,8 +142,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc1397b33da184816a647f49d78bd90b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  columns: 25
-  rows: 20
   grassfloorTiles:
   - {fileID: 1363377925327114, guid: 68a162f32603844e2ad910b2d85c8e1b, type: 2}
   - {fileID: 1646958220458468, guid: bbcd61b5a5b424233a057c0672c322a9, type: 2}
@@ -159,6 +158,14 @@ MonoBehaviour:
   - {fileID: 1468177836773992, guid: 9efdb6be6435640d582d076d96e298d8, type: 2}
   - {fileID: 1113536164229988, guid: 8b13188d212de4460b4ddb0376cef592, type: 2}
   - {fileID: 1296735881285730, guid: c91472c46eb7f4ca5965a889787a4bbf, type: 2}
+  stonefloorTiles:
+  - {fileID: 1987205847352596, guid: b60f3c556f1614ad99c115069c01b74e, type: 2}
+  CoverfloorTiles:
+  - {fileID: 1023160659097742, guid: 4efa7417d57534f88be0ca977079fd3d, type: 2}
+  - {fileID: 1423591409865100, guid: 0f6ecd23f9a0648d7b24148a00572bdf, type: 2}
+  - {fileID: 1868832290136136, guid: cd374902f3c4f4a4cbed3c2878d08b54, type: 2}
+  columns: 25
+  rows: 20
 --- !u!114 &1335156733
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -183,6 +190,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1335156735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1335156731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1754900f142bc4affbed023046337f6b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1844331188
 GameObject:
   m_ObjectHideFlags: 0
@@ -235,7 +253,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 16
+  orthographic size: 11.12
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2

@@ -15,6 +15,11 @@ public class FirstBoardManager : BoardManager {
 		floorYArray = new float[25, 20];
 		lastTileArray = new string[25, 20];
 		floorHightArray = new int[25, 20];
+		lastTileOrderArray = new int[25, 20];
+		lastTileSortArray = new string[25, 20];
+
+		playerPosArray = new int[1, 2]{ {8, 17} };
+
 		base.Awake ();
 	}
 
@@ -26,8 +31,8 @@ public class FirstBoardManager : BoardManager {
 
 
 
-	int layerOneRender(int LayerOrder,Transform boardHolder){
-		for (int y = rows - 1; y >= 0; y--) {
+	int layerOneRender(int LayerOrder,Transform boardHolder, int y){
+		
 			//Loop along y axis, starting from -1 to place floor or outerwall tiles.
 			for (int x = 0; x < columns; x++) {
 				GameObject toInstantiate = sandfloorTiles [1];
@@ -73,15 +78,15 @@ public class FirstBoardManager : BoardManager {
 				LayerOrder = setFloor (toInstantiate, LayerOrder,x ,y, true);
 
 			}
-		}
 
-		return 0;
+
+		return LayerOrder;
 	}
 
 
 
-	int layerTwoRender(int LayerOrder){
-		for (int y = rows - 1; y >= 0; y--) {
+	int layerTwoRender(int LayerOrder,int y){
+		
 			//Loop along y axis, starting from -1 to place floor or outerwall tiles.
 			for (int x = 0; x < columns; x++) {
 				GameObject toInstantiate = sandfloorTiles [1];
@@ -140,16 +145,15 @@ public class FirstBoardManager : BoardManager {
 					LayerOrder = setFloor (toInstantiate, LayerOrder, x, y, false);
 				}
 			}
-		}
 
-		layerTwoCoverRender (LayerOrder);
-		print (floorYArray [0, 0]);
-		return 0;
+
+		layerTwoCoverRender (LayerOrder,y);
+		return LayerOrder;
 	}
 		
 
-	int layerTwoCoverRender(int LayerOrder){
-		for (int y = rows - 1; y >= 0; y--) {
+	int layerTwoCoverRender(int LayerOrder,int y){
+		
 			//Loop along y axis, starting from -1 to place floor or outerwall tiles.
 			for (int x = 0; x < columns; x++) {
 				GameObject toInstantiate = null;
@@ -184,13 +188,13 @@ public class FirstBoardManager : BoardManager {
 
 
 			}
-		}
+
 		return LayerOrder;
 	}
 
 
-	int layerThreeRender(int LayerOrder){
-		for (int y = rows - 1; y >= 0; y--) {
+	int layerThreeRender(int LayerOrder,int y){
+		
 			//Loop along y axis, starting from -1 to place floor or outerwall tiles.
 			for (int x = 0; x < columns; x++) {
 				GameObject toInstantiate = null;
@@ -220,13 +224,13 @@ public class FirstBoardManager : BoardManager {
 					LayerOrder = setFloor (toInstantiate, LayerOrder, x, y, false);
 				}
 			}
-		}
+
 
 		return LayerOrder;
 	}
 
-	int layerFourRender(int LayerOrder){
-		for (int y = rows - 1; y >= 0; y--) {
+	int layerFourRender(int LayerOrder,int y){
+		
 			//Loop along y axis, starting from -1 to place floor or outerwall tiles.
 			for (int x = 0; x < columns; x++) {
 				GameObject toInstantiate = null;
@@ -251,12 +255,12 @@ public class FirstBoardManager : BoardManager {
 				}
 
 			}
-		}
+
 		return LayerOrder;
 	}
 
-	int layerFiveRender(int LayerOrder){
-		for (int y = rows - 1; y >= 0; y--) {
+	int layerFiveRender(int LayerOrder,int y){
+		
 			//Loop along y axis, starting from -1 to place floor or outerwall tiles.
 			for (int x = 0; x < columns; x++) {
 				GameObject toInstantiate = null;
@@ -275,7 +279,7 @@ public class FirstBoardManager : BoardManager {
 				
 
 			}
-		}
+
 		return LayerOrder;
 	}
 
@@ -284,30 +288,42 @@ public class FirstBoardManager : BoardManager {
 
 		int LayerOrder = 0;
 
-
-		for(int layerIndex = 0; layerIndex < 5;layerIndex++){
-		//Loop along x axis, starting from -1 (to fill corner) with floor or outerwall edge tiles.
-			if (layerIndex == 0) {
-				LayerOrder = layerOneRender (LayerOrder, boardHolder);
-			} else if (layerIndex == 1) {
-				LayerOrder = layerTwoRender (LayerOrder);
-			} else if (layerIndex == 2) {
-				LayerOrder = layerThreeRender (LayerOrder);
-			} else if (layerIndex == 3) {
-				LayerOrder = layerFourRender (LayerOrder);
-			} else if (layerIndex == 4) {
-				LayerOrder = layerFiveRender (LayerOrder);
+		for (int y = rows - 1; y >= 0; y--) {
+			for (int layerIndex = 0; layerIndex < 5; layerIndex++) {
+				//Loop along x axis, starting from -1 (to fill corner) with floor or outerwall edge tiles.
+				if (layerIndex == 0) {
+					LayerOrder = layerOneRender (LayerOrder, boardHolder,y);
+				} else if (layerIndex == 1) {
+					LayerOrder = layerTwoRender (LayerOrder,y);
+				} else if (layerIndex == 2) {
+					LayerOrder = layerThreeRender (LayerOrder,y);
+				} else if (layerIndex == 3) {
+					LayerOrder = layerFourRender (LayerOrder,y);
+				} else if (layerIndex == 4) {
+					LayerOrder = layerFiveRender (LayerOrder,y);
+				}
 			}
+		}
 
+	}
+
+	protected override void PlayersRender(Transform playersHolder){
+		//print (playerPosArray [0,0]);
+		for(int i = 0; i<Players.Length; i++) {
+			rendePlayer (playerPosArray [i, 0], playerPosArray [i, 1], Players[i],playersHolder);
 		}
 	}
+
 
 	void BoardSetup ()
 	{
 		//Instantiate Board and set boardHolder to its transform.
 		boardHolder = new GameObject ("Board").transform;
+		playersHolder = new GameObject ("Players").transform;
 		BoardRender (boardHolder);
 		//print (floorHightArray [1, 14]);
+
+		PlayersRender(playersHolder);
 
 	}
 

@@ -8,15 +8,20 @@ public abstract class BoardManager : MonoBehaviour {
 	public float[,] floorYArray;
 	public string[,] lastTileArray;
 	public int[,] floorHightArray;
+	public string[,] lastTileSortArray;
+	public int[,] lastTileOrderArray;
 
 	public GameObject[] grassfloorTiles;
 	public GameObject[] waterfloorTiles;
 	public GameObject[] lowfloorTiles;
 	public GameObject[] sandfloorTiles;
 	public GameObject[] stonefloorTiles; 
-	public GameObject[] CoverfloorTiles; 
+	public GameObject[] CoverfloorTiles;
+	public GameObject[] Players;
 
+	protected int[,] playerPosArray;
 	protected Transform boardHolder;
+	protected Transform playersHolder;
 	protected Dictionary<string, string> HeightDic = new Dictionary<string, string>();
 
 
@@ -25,8 +30,11 @@ public abstract class BoardManager : MonoBehaviour {
 		floorYArray [x, y] = high;
 	}
 
-	public void updateLastTileArray(int x, int y, string lastTile){
+	public void updateLastTileArray(int x, int y, string lastTile, string lastTileSort, int lastTileOrder){
+
 		lastTileArray [x, y] = lastTile;
+		lastTileSortArray [x, y] = lastTileSort;
+		lastTileOrderArray [x, y] = lastTileOrder;
 	}
 
 	public void updateFloorHightArray(int x, int y, int hight){
@@ -46,8 +54,9 @@ public abstract class BoardManager : MonoBehaviour {
 		} else {
 			newVec.y = floorYArray [x, y] + 1.5f;
 		}
+
 		floorYArray [x, y] = newVec.y;
-		lastTileArray [x, y] = toInstantiate.tag;
+		updateLastTileArray(x,y,toInstantiate.tag,toInstantiate.GetComponent<SpriteRenderer> ().sortingLayerName,toInstantiate.GetComponent<SpriteRenderer> ().sortingOrder);
 		floorHightArray [x, y] += Int32.Parse (HeightDic [toInstantiate.tag]);
 
 		newVec.z = 0f;
@@ -93,7 +102,7 @@ public abstract class BoardManager : MonoBehaviour {
 			int height;
 			height = Int32.Parse (HeightDic [toInstantiate.tag]);
 			updateFloorYArray(x,y,TransFromWorldToISO (new Vector3 (x, y, 0f), toInstantiate).y);
-			updateLastTileArray (x, y, toInstantiate.tag);
+			updateLastTileArray (x, y, toInstantiate.tag, toInstantiate.GetComponent<SpriteRenderer> ().sortingLayerName,toInstantiate.GetComponent<SpriteRenderer> ().sortingOrder);
 			updateFloorHightArray(x,y,height);
 
 		} else {
@@ -131,6 +140,48 @@ public abstract class BoardManager : MonoBehaviour {
 		return LayerOrder;
 	}
 
+	protected virtual void PlayersRender(Transform playersHolder){
+		
+	}
+
+	protected bool isOverlay(int x, int y){		
+		print (lastTileSortArray [x, y + 1]);
+		if (x > 0) {
+			if (lastTileSortArray [x - 1, y] == "higherFloor" || lastTileSortArray [x, y + 1] == "higherFloor") {
+				return true;
+			}
+		}else if(lastTileSortArray [x, y + 1] == "higherFloor") {
+			return true;
+		} 
+			return false;
+
+	}
+
+	protected void rendePlayer(int x, int y, GameObject player, Transform playersHolder){
+		Vector3 newVec = new Vector3();
+		newVec.x = x + y;
+
+		if (lastTileArray [x, y] == "lowFloor") {
+			newVec.y = floorYArray [x, y] +1f;
+		} else if (lastTileArray [x, y] == "normalFloor"){
+			newVec.y = floorYArray [x, y] +1.5f;
+		}
+
+		player.GetComponent<SpriteRenderer> ().sortingOrder = lastTileOrderArray[x,y] +1;
+
+		if (isOverlay (x, y)) {
+			player.GetComponent<SpriteRenderer> ().sortingLayerName = "higherFloor";
+		} else {
+			player.GetComponent<SpriteRenderer> ().sortingLayerName = "floor";
+		}
+
+		GameObject instance =
+			Instantiate (player, newVec, Quaternion.identity) as GameObject;
+
+		instance.transform.SetParent (playersHolder);
+
+
+	}
 
 	protected void Awake(){
 		HeightDic.Add ("lowFloor", "1");

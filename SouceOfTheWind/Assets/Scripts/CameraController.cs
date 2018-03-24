@@ -10,7 +10,6 @@ public class CameraController : MonoBehaviour {
 
 	void Start () {
 		Resolution[] resolutions = Screen.resolutions;
-		print (Screen.height);
 	}
 	
 	// Update is called once per frame
@@ -47,7 +46,7 @@ public class CameraController : MonoBehaviour {
 			}
 		} 
 
-		print (Camera.main.ScreenToWorldPoint (new Vector3(0f,0f,0f)).y);
+		//print (Camera.main.ScreenToWorldPoint (new Vector3(0f,0f,0f)).y);
 
 		//print (Input.mousePosition.y);
 		if (Input.mousePosition.y / Screen.height >= 0.95 && Camera.main.ScreenToWorldPoint (new Vector3(0f,Screen.height,0f)).y <=12) {
