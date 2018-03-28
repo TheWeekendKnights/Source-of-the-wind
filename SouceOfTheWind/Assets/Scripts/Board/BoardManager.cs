@@ -5,11 +5,18 @@ using System;
 using System.Linq;
 
 public abstract class BoardManager : MonoBehaviour {
+
+	public static BoardManager instance = null;
+
+	public int columns ; 										//Number of columns in our game board.
+	public int rows ;											//Number of rows in our game board.
 	public float[,] floorYArray;
 	public string[,] lastTileArray;
 	public int[,] floorHightArray;
 	public string[,] lastTileSortArray;
 	public int[,] lastTileOrderArray;
+	public int[,] floorMoveableArray;
+	public int floorHight;
 
 	public GameObject[] grassfloorTiles;
 	public GameObject[] waterfloorTiles;
@@ -144,8 +151,8 @@ public abstract class BoardManager : MonoBehaviour {
 		
 	}
 
-	protected bool isOverlay(int x, int y){		
-		print (lastTileSortArray [x, y + 1]);
+	public bool isOverlay(int x, int y){		
+		//print (lastTileSortArray [x, y + 1]);
 		if (x > 0) {
 			if (lastTileSortArray [x - 1, y] == "higherFloor" || lastTileSortArray [x, y + 1] == "higherFloor") {
 				return true;
@@ -183,9 +190,35 @@ public abstract class BoardManager : MonoBehaviour {
 
 	}
 
+	protected void initFloorMoveAbleArray(){
+		for (int i = 0; i < columns; i++) {
+			for (int i2 = 0; i2 < rows; i2++) {
+				if (floorHightArray [i, i2] == floorHight) {
+					floorMoveableArray [i, i2] = 1;
+				}
+			}
+		}
+	}
+
+	protected void updateFloorMoveAbleArray(int x, int y, int MoveAble){
+		floorMoveableArray [x, y] = MoveAble;
+	}
+
 	protected void Awake(){
 		HeightDic.Add ("lowFloor", "1");
 		HeightDic.Add ("normalFloor", "3");
+
+		floorYArray = new float[columns, rows];
+		lastTileArray = new string[columns, rows];
+		floorHightArray = new int[columns, rows];
+		lastTileOrderArray = new int[columns, rows];
+		lastTileSortArray = new string[columns, rows];
+		floorMoveableArray = new int[columns, rows];
+
+		if (instance == null) {
+			instance = this;
+		} 
+
 	}
 		
 	// Use this for initialization

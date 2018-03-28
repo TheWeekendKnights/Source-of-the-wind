@@ -6,19 +6,17 @@ using System.Linq;
 
 public class FirstBoardManager : BoardManager {
 
-	public int columns = 25; 										//Number of columns in our game board.
-	public int rows = 20;											//Number of rows in our game board.
+
 
 
 
 	void Awake(){
-		floorYArray = new float[25, 20];
-		lastTileArray = new string[25, 20];
-		floorHightArray = new int[25, 20];
-		lastTileOrderArray = new int[25, 20];
-		lastTileSortArray = new string[25, 20];
 
-		playerPosArray = new int[1, 2]{ {8, 17} };
+		columns = 25;
+		rows = 20;
+
+		floorHight = 4;
+		playerPosArray = new int[1, 2]{ {5, 13}};
 
 		base.Awake ();
 	}
@@ -308,11 +306,15 @@ public class FirstBoardManager : BoardManager {
 	}
 
 	protected override void PlayersRender(Transform playersHolder){
-		//print (playerPosArray [0,0]);
+		
 		for(int i = 0; i<Players.Length; i++) {
 			rendePlayer (playerPosArray [i, 0], playerPosArray [i, 1], Players[i],playersHolder);
+
+			Players[i].GetComponent<Player>().ObjGridVec = new Vector3(playerPosArray[i,0],playerPosArray [i, 1],0);
+			updateFloorMoveAbleArray (playerPosArray [i, 0], playerPosArray [i, 1], 0);
 		}
 	}
+
 
 
 	void BoardSetup ()
@@ -321,9 +323,12 @@ public class FirstBoardManager : BoardManager {
 		boardHolder = new GameObject ("Board").transform;
 		playersHolder = new GameObject ("Players").transform;
 		BoardRender (boardHolder);
-		//print (floorHightArray [1, 14]);
+
+		initFloorMoveAbleArray ();
 
 		PlayersRender(playersHolder);
+
+
 
 	}
 
