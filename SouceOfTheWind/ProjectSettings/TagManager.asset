@@ -6,6 +6,7 @@ TagManager:
   tags:
   - lowFloor
   - normalFloor
+  - range
   layers:
   - Default
   - TransparentFX
@@ -54,4 +55,7 @@ TagManager:
     locked: 0
   - name: higherFloor
     uniqueID: 3049920439
+    locked: 0
+  - name: Player
+    uniqueID: 3901382217
     locked: 0
